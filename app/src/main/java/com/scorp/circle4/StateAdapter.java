@@ -16,7 +16,7 @@ public class StateAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return new FragmentChoice();
+                return new ChoiceFragment();
             case 1:
                 return new StartFragment();
             default:

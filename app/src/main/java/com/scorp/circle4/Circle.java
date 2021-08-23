@@ -1,6 +1,6 @@
 package com.scorp.circle4;
 
-public class Choice {
+public class Circle {
 
     /** field for image of the sharik*/
     private int mImage;
@@ -8,15 +8,20 @@ public class Choice {
     /** field for price of the sharik*/
     private int mPrice;
 
+    /** field for transparent of the sharik*/
+    private boolean isBought;
+
     /**
-     *
      * @param mImage for image of the sharik
      * @param mPrice for price of the sharik
+     * @param isBought for being bought or not
      */
-    public Choice(int mImage,
-                    int mPrice) {
+    public Circle(int mImage,
+                  int mPrice,
+                  boolean isBought) {
         this.mImage = mImage;
         this.mPrice = mPrice;
+        this.isBought = isBought;
     }
 
     public int getmImage() {
@@ -33,5 +38,13 @@ public class Choice {
 
     public void setmPrice(int mPrice) {
         this.mPrice = mPrice;
+    }
+
+    public void setBought(boolean bought) {
+        isBought = bought;
+    }
+
+    public boolean isBought() {
+        return isBought;
     }
 }

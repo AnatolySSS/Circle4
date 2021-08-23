@@ -13,22 +13,22 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class ChoiceAdapter extends ArrayAdapter<Choice> {
+public class ChoiceAdapter extends ArrayAdapter<Circle> {
 
-    public ChoiceAdapter(@NonNull Context context, ArrayList<Choice> choice) {
-        super(context, 0, choice);
+    public ChoiceAdapter(@NonNull Context context, ArrayList<Circle> circle) {
+        super(context, 0, circle);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Choice currentPurchase = getItem(position);
+        Circle currentPurchase = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.choice_list, parent, false);
         }
 
         TextView purchasePrice = (TextView) convertView.findViewById(R.id.choice_price);
-        purchasePrice.setText(currentPurchase.getmPrice() + " Clicks");
+        purchasePrice.setText(currentPurchase.getmPrice() + "Cl");
         ImageView purchaseImage = (ImageView) convertView.findViewById(R.id.choice_image);
         purchaseImage.setImageResource(currentPurchase.getmImage());
 
