@@ -5,6 +5,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
