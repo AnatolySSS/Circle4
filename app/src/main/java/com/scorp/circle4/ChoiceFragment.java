@@ -23,37 +23,29 @@ public class ChoiceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View mView = inflater.inflate(R.layout.fragment_choice, container, false);
+        View mView = inflater.inflate(R.layout.activity_choice, container, false);
 
-        final ArrayList<Circle> purchases = new ArrayList<>();
-        purchases.add(new Circle(R.drawable.circle_black2, 10, false));
-        purchases.add(new Circle(R.drawable.circle_blue2, 20, false));
-        purchases.add(new Circle(R.drawable.circle_red2, 30, false));
-        purchases.add(new Circle(R.drawable.circle_purple2, 40, false));
-        purchases.add(new Circle(R.drawable.circle_black2, 50, false));
-        purchases.add(new Circle(R.drawable.circle_blue2, 60, false));
-        purchases.add(new Circle(R.drawable.circle_red2, 70, false));
-        purchases.add(new Circle(R.drawable.circle_purple2, 80, false));
-        purchases.add(new Circle(R.drawable.circle_black2, 90, false));
-        purchases.add(new Circle(R.drawable.circle_blue2, 100, false));
-        purchases.add(new Circle(R.drawable.circle_red2, 110, false));
-        purchases.add(new Circle(R.drawable.circle_purple2, 120, false));
+        final ArrayList<Circle> circles = ((GlobalVariables) getActivity().getApplication()).circles;
+        circles.add(new Circle(R.drawable.circle_black2, 10, false));
+        circles.add(new Circle(R.drawable.circle_blue2, 20, false));
+        circles.add(new Circle(R.drawable.circle_red2, 30, false));
+        circles.add(new Circle(R.drawable.circle_purple2, 40, false));
 
-        ChoiceAdapter purchaseAdapter = new ChoiceAdapter(this.getContext(), purchases);
+        CircleAdapter purchaseAdapter = new CircleAdapter(this.getContext(), circles);
         GridView gridView = (GridView) mView.findViewById(R.id.choice_list);
         gridView.setAdapter(purchaseAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 long currentScore = ((GlobalVariables) getActivity().getApplication()).getTotalScore();
-                int price = purchases.get(i).getmPrice();
+                int price = circles.get(i).getmPrice();
 
-                if (purchases.get(i).isBought()) {
-                    ((GlobalVariables) getActivity().getApplication()).setCircleType(purchases.get(i).getmImage());
+                if (circles.get(i).isBought()) {
+                    ((GlobalVariables) getActivity().getApplication()).setCircleType(circles.get(i).getmImage());
                 } else {
                     if (currentScore >= price) {
-                        purchases.get(i).setBought(true);
-                        ((GlobalVariables) getActivity().getApplication()).setCircleType(purchases.get(i).getmImage());
+                        circles.get(i).setBought(true);
+                        ((GlobalVariables) getActivity().getApplication()).setCircleType(circles.get(i).getmImage());
                         ((GlobalVariables) getActivity().getApplication()).setTotalScore(currentScore - price);
                         view.findViewById(R.id.choice_image).setAlpha(1);
                         view.findViewById(R.id.choice_price).setVisibility(View.GONE);

@@ -10,6 +10,7 @@
         android:roundIcon="@mipmap/logo2"
         android:supportsRtl="true"
         android:theme="@style/Theme.Circle4">
+        <activity android:name=".ChoiceActivity"></activity>
         <activity
             android:name=".MainActivity">
             <intent-filter>

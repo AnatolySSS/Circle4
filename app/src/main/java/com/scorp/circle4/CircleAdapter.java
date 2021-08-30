@@ -13,9 +13,11 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
-public class ChoiceAdapter extends ArrayAdapter<Circle> {
+public class CircleAdapter extends ArrayAdapter<Circle> {
 
-    public ChoiceAdapter(@NonNull Context context, ArrayList<Circle> circle) {
+    final ArrayList<Circle> circles = ((GlobalVariables) getContext().getApplicationContext()).circles;
+
+    public CircleAdapter(@NonNull Context context, ArrayList<Circle> circle) {
         super(context, 0, circle);
     }
 
@@ -31,6 +33,11 @@ public class ChoiceAdapter extends ArrayAdapter<Circle> {
         purchasePrice.setText(currentPurchase.getmPrice() + "Cl");
         ImageView purchaseImage = (ImageView) convertView.findViewById(R.id.choice_image);
         purchaseImage.setImageResource(currentPurchase.getmImage());
+
+        if (circles.get(position).isBought()) {
+            purchaseImage.setAlpha((float) 1.0);
+            purchasePrice.setVisibility(View.GONE);
+        }
 
         return convertView;
     }

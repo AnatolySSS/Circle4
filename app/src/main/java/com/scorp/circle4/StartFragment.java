@@ -1,5 +1,6 @@
 package com.scorp.circle4;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -38,6 +39,15 @@ public class StartFragment extends Fragment {
         circle2 = rootView.findViewById(R.id.circle2);
         tapToGame = rootView.findViewById(R.id.tapToGame);
         scoreText = rootView.findViewById(R.id.scoreTextStart);
+
+        startCircle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), ChoiceActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 

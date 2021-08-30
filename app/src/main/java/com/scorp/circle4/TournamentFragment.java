@@ -1,6 +1,8 @@
 package com.scorp.circle4;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Path;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,23 +16,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Random;
 
-
-public class UnlimitePlayFragment extends Fragment {
+public class TournamentFragment extends Fragment {
 
     private View unlimitePlayView;
-    public ImageView circle;
-    private TextView scoreText;
+    private ImageView circle;
+    private TextView scoreText, testText;
     private ObjectAnimator animCircle, animText;
     private int deviceWidth = 0;
     private int deviceHeight = 0;
-    private long score;
+    private long score = 0;
     private String totalScoreStr;
     private int xRand, yRand;
+    private int xStart, yStart;
+    private final int MAX_LENGTH = 420;
 
-    public UnlimitePlayFragment() {
+    public TournamentFragment() {
         // Required empty public constructor
     }
 
@@ -38,9 +42,10 @@ public class UnlimitePlayFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        unlimitePlayView = inflater.inflate(R.layout.fragment_unlimite_play, container, false);
+        unlimitePlayView = inflater.inflate(R.layout.fragment_tournament, container, false);
         circle = unlimitePlayView.findViewById(R.id.circle);
         scoreText = unlimitePlayView.findViewById(R.id.scoreText);
+        testText = unlimitePlayView.findViewById(R.id.testText);
 
         deviceWidth = unlimitePlayView.getResources().getDisplayMetrics().widthPixels;
         deviceHeight = unlimitePlayView.getResources().getDisplayMetrics().heightPixels;
@@ -48,6 +53,9 @@ public class UnlimitePlayFragment extends Fragment {
         circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                xStart = (int) circle.getX();
+                yStart = (int) circle.getY();
 
                 score++;
                 totalScoreStr = String.valueOf(score);
@@ -57,20 +65,31 @@ public class UnlimitePlayFragment extends Fragment {
                 yRand = new Random().nextInt(deviceHeight - circle.getHeight());
 
                 Path path = new Path();
-                path.moveTo(circle.getX(), circle.getY());
+                path.moveTo(xStart, yStart);
                 path.lineTo(xRand, yRand);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     animCircle = ObjectAnimator.ofFloat(circle, "x", "y", path);
-                    animCircle.setDuration(500);
+                    animCircle.setDuration(1000);
                     animCircle.start();
 
                     animText = ObjectAnimator.ofFloat(scoreText, "x", "y", path);
-                    animText.setDuration(500);
+                    animText.setDuration(1000);
                     animText.start();
-                }
 
-                ((GlobalVariables) getActivity().getApplication()).setTotalScore(score);
+                    animCircle.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            float currentX = (float) valueAnimator.getAnimatedValue("x");
+                            float currentY = (float) valueAnimator.getAnimatedValue("y");
+                            int currentLength = (int) Math.sqrt(Math.pow(Math.abs(currentX - xStart), 2) + Math.pow(Math.abs(currentY - yStart), 2));
+                            testText.setText("");
+                            if (currentLength > MAX_LENGTH) {
+                                testText.append(String.valueOf(currentLength));
+                            }
+                        }
+                    });
+                }
             }
         });
 
@@ -81,9 +100,7 @@ public class UnlimitePlayFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (((GlobalVariables) getActivity().getApplication()).getCircleType() != 0) {
-            score = ((GlobalVariables) getActivity().getApplication()).getTotalScore();
             circle.setImageResource(((GlobalVariables) getActivity().getApplication()).getCircleType());
-            scoreText.setText(String.valueOf(((GlobalVariables) getActivity().getApplication()).getTotalScore()));
         }
     }
 }
