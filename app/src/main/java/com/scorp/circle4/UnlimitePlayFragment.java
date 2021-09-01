@@ -1,6 +1,8 @@
 package com.scorp.circle4;
 
 import android.animation.ObjectAnimator;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Path;
 import android.os.Build;
 import android.os.Bundle;
@@ -80,10 +82,22 @@ public class UnlimitePlayFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (((GlobalVariables) getActivity().getApplication()).getCircleType() != 0) {
+
+        byte[] currentCircle = ((GlobalVariables) this.getActivity().getApplication()).getCircleType();
+        if (currentCircle != null) {
+
             score = ((GlobalVariables) getActivity().getApplication()).getTotalScore();
-            circle.setImageResource(((GlobalVariables) getActivity().getApplication()).getCircleType());
             scoreText.setText(String.valueOf(((GlobalVariables) getActivity().getApplication()).getTotalScore()));
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inDither = false;
+            options.inPurgeable = true;
+            options.inInputShareable = true;
+            options.inTempStorage = new byte[1024 *32];
+
+            Bitmap bm = BitmapFactory.decodeByteArray(currentCircle, 0, currentCircle.length, options);
+
+            circle.setImageBitmap(bm);
         }
     }
 }

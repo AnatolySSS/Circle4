@@ -1,6 +1,8 @@
 package com.scorp.circle4;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -56,8 +58,18 @@ public class StartFragment extends Fragment {
         super.onResume();
         scoreText.setText("TOTAL SCORE ");
         scoreText.append(String.valueOf(((GlobalVariables) this.getActivity().getApplication()).getTotalScore()));
-        if (((GlobalVariables) getActivity().getApplication()).getCircleType() != 0) {
-            startCircle.setImageResource(((GlobalVariables) this.getActivity().getApplication()).getCircleType());
+        byte[] currentCircle = ((GlobalVariables) this.getActivity().getApplication()).getCircleType();
+        if (currentCircle != null) {
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inDither = false;
+            options.inPurgeable = true;
+            options.inInputShareable = true;
+            options.inTempStorage = new byte[1024 *32];
+
+            Bitmap bm = BitmapFactory.decodeByteArray(currentCircle, 0, currentCircle.length, options);
+
+            startCircle.setImageBitmap(bm);
         }
     }
 }

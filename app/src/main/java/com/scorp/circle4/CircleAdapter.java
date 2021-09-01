@@ -1,6 +1,8 @@
 package com.scorp.circle4;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,19 +26,29 @@ public class CircleAdapter extends ArrayAdapter<Circle> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Circle currentPurchase = getItem(position);
+        Circle currentCircle = getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.choice_list, parent, false);
         }
 
-        TextView purchasePrice = (TextView) convertView.findViewById(R.id.choice_price);
-        purchasePrice.setText(currentPurchase.getmPrice() + "Cl");
-        ImageView purchaseImage = (ImageView) convertView.findViewById(R.id.choice_image);
-        purchaseImage.setImageResource(currentPurchase.getmImage());
+        TextView circlePrice = (TextView) convertView.findViewById(R.id.choice_price);
+        circlePrice.setText(currentCircle.getmPrice() + "Cl");
+        ImageView circleImage = (ImageView) convertView.findViewById(R.id.choice_image);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inDither = false;
+        options.inPurgeable = true;
+        options.inInputShareable = true;
+        options.inTempStorage = new byte[1024 * 32];
+
+        Bitmap bm = BitmapFactory.decodeByteArray(currentCircle.getmImage(), 0, currentCircle.getmImage().length, options);
+        circleImage.setImageBitmap(bm);
 
         if (circles.get(position).isBought()) {
-            purchaseImage.setAlpha((float) 1.0);
-            purchasePrice.setVisibility(View.GONE);
+            circleImage.setAlpha((float) 1.0);
+            circlePrice.setVisibility(View.GONE);
+        } else {
+            circleImage.setAlpha((float) 0.5);
+            circlePrice.setVisibility(View.VISIBLE);
         }
 
         return convertView;

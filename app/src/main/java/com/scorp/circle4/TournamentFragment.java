@@ -3,6 +3,8 @@ package com.scorp.circle4;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Path;
 import android.os.Build;
 import android.os.Bundle;
@@ -99,8 +101,18 @@ public class TournamentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (((GlobalVariables) getActivity().getApplication()).getCircleType() != 0) {
-            circle.setImageResource(((GlobalVariables) getActivity().getApplication()).getCircleType());
+        byte[] currentCircle = ((GlobalVariables) this.getActivity().getApplication()).getCircleType();
+        if (currentCircle != null) {
+
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inDither = false;
+            options.inPurgeable = true;
+            options.inInputShareable = true;
+            options.inTempStorage = new byte[1024 *32];
+
+            Bitmap bm = BitmapFactory.decodeByteArray(currentCircle, 0, currentCircle.length, options);
+
+            circle.setImageBitmap(bm);
         }
     }
 }
