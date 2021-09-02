@@ -3,15 +3,16 @@ package com.scorp.circle4;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.ContentValues;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.transition.TransitionManager;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+import com.scorp.circle4.data.MainValuesContract;
+import com.scorp.circle4.data.MainValuesContract.MainValuesEntry;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,5 +46,17 @@ public class MainActivity extends AppCompatActivity {
                 new StateAdapter(this)
         );
         viewPager2.setCurrentItem(1, false);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        ContentValues cv_main_values = new ContentValues();
+        cv_main_values.put(MainValuesEntry.COLUMN_MAIN_VALUE_CURRENT_CIRCLE, ((GlobalVariables) getApplication()).getCurrentCircle());
+        cv_main_values.put(MainValuesEntry.COLUMN_MAIN_VALUE_CURRENT_SCORE, ((GlobalVariables) getApplication()).getCurrentScore());
+
+        ((GlobalVariables) getApplication()).mDb.update(MainValuesEntry.TABLE_NAME, cv_main_values, MainValuesEntry._ID + "=" + 1, null);
+
     }
 }

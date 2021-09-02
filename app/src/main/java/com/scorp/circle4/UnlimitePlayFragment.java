@@ -72,7 +72,7 @@ public class UnlimitePlayFragment extends Fragment {
                     animText.start();
                 }
 
-                ((GlobalVariables) getActivity().getApplication()).setTotalScore(score);
+                ((GlobalVariables) getActivity().getApplication()).setCurrentScore(score);
             }
         });
 
@@ -83,11 +83,11 @@ public class UnlimitePlayFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        byte[] currentCircle = ((GlobalVariables) this.getActivity().getApplication()).getCircleType();
+        byte[] currentCircle = ((GlobalVariables) this.getActivity().getApplication()).getCurrentCircle();
         if (currentCircle != null) {
 
-            score = ((GlobalVariables) getActivity().getApplication()).getTotalScore();
-            scoreText.setText(String.valueOf(((GlobalVariables) getActivity().getApplication()).getTotalScore()));
+            score = ((GlobalVariables) getActivity().getApplication()).getCurrentScore();
+            scoreText.setText(String.valueOf(((GlobalVariables) getActivity().getApplication()).getCurrentScore()));
 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inDither = false;
@@ -96,6 +96,7 @@ public class UnlimitePlayFragment extends Fragment {
             options.inTempStorage = new byte[1024 *32];
 
             Bitmap bm = BitmapFactory.decodeByteArray(currentCircle, 0, currentCircle.length, options);
+            bm = Bitmap.createScaledBitmap(bm, circle.getMaxWidth(),circle.getMaxHeight(),true);
 
             circle.setImageBitmap(bm);
         }

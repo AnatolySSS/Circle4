@@ -57,8 +57,8 @@ public class StartFragment extends Fragment {
     public void onResume() {
         super.onResume();
         scoreText.setText("TOTAL SCORE ");
-        scoreText.append(String.valueOf(((GlobalVariables) this.getActivity().getApplication()).getTotalScore()));
-        byte[] currentCircle = ((GlobalVariables) this.getActivity().getApplication()).getCircleType();
+        scoreText.append(String.valueOf(((GlobalVariables) this.getActivity().getApplication()).getCurrentScore()));
+        byte[] currentCircle = ((GlobalVariables) this.getActivity().getApplication()).getCurrentCircle();
         if (currentCircle != null) {
 
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -66,8 +66,10 @@ public class StartFragment extends Fragment {
             options.inPurgeable = true;
             options.inInputShareable = true;
             options.inTempStorage = new byte[1024 *32];
+            int dp = (int) getContext().getResources().getDisplayMetrics().density;
 
             Bitmap bm = BitmapFactory.decodeByteArray(currentCircle, 0, currentCircle.length, options);
+            bm = Bitmap.createScaledBitmap(bm, startCircle.getMaxWidth(),startCircle.getMaxHeight(),true);
 
             startCircle.setImageBitmap(bm);
         }

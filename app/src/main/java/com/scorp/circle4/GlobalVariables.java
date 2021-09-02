@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.scorp.circle4.data.CircleDbHelper;
+import com.scorp.circle4.data.MainValuesContract.MainValuesEntry;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,8 +15,8 @@ import java.util.ArrayList;
 import static com.scorp.circle4.data.CircleContract.CircleEntry;
 
 public class GlobalVariables extends Application {
-    public long totalScore = 0;
-    public byte[] circleType;
+    public long currentScore;
+    public byte[] currentCircle;
     public final ArrayList<Circle> circles = new ArrayList<>();
     public CircleDbHelper mDbHelper;
     public SQLiteDatabase mDb;
@@ -37,7 +38,7 @@ public class GlobalVariables extends Application {
             throw mSQLException;
         }
 
-        String[] projection = {
+        String[] projection_circles = {
                 CircleEntry._ID,
                 CircleEntry.COLUMN_CIRCLE_NAME,
                 CircleEntry.COLUMN_CIRCLE_PRICE,
@@ -45,31 +46,46 @@ public class GlobalVariables extends Application {
                 CircleEntry.COLUMN_CIRCLE_PICTURE
         };
 
-        Cursor cursor = mDb.query(CircleEntry.TABLE_NAME, projection, null, null, null, null, null);
-        cursor.moveToFirst();
+        Cursor cursor_table_circles = mDb.query(CircleEntry.TABLE_NAME, projection_circles, null, null, null, null, null);
+        cursor_table_circles.moveToFirst();
         do {
-            circles.add(new Circle(cursor.getString(cursor.getColumnIndex(CircleEntry.COLUMN_CIRCLE_NAME)),
-                                   cursor.getInt(cursor.getColumnIndex(CircleEntry.COLUMN_CIRCLE_PRICE)),
-                                   cursor.getInt(cursor.getColumnIndex(CircleEntry.COLUMN_CIRCLE_ISBOUGHT)),
-                                   cursor.getBlob(cursor.getColumnIndex(CircleEntry.COLUMN_CIRCLE_PICTURE))));
-        } while (cursor.moveToNext());
-        cursor.close();
+            circles.add(new Circle(cursor_table_circles.getString(cursor_table_circles.getColumnIndex(CircleEntry.COLUMN_CIRCLE_NAME)),
+                                   cursor_table_circles.getInt(cursor_table_circles.getColumnIndex(CircleEntry.COLUMN_CIRCLE_PRICE)),
+                                   cursor_table_circles.getInt(cursor_table_circles.getColumnIndex(CircleEntry.COLUMN_CIRCLE_ISBOUGHT)),
+                                   cursor_table_circles.getBlob(cursor_table_circles.getColumnIndex(CircleEntry.COLUMN_CIRCLE_PICTURE))));
+        } while (cursor_table_circles.moveToNext());
+
+        cursor_table_circles.close();
+
+        String[] projection_main_values = {
+                MainValuesEntry.COLUMN_MAIN_VALUE_CURRENT_SCORE,
+                MainValuesEntry.COLUMN_MAIN_VALUE_CURRENT_CIRCLE,
+        };
+
+        Cursor cursor_table_main_values = mDb.query(MainValuesEntry.TABLE_NAME, projection_main_values, null, null, null, null, null);
+        cursor_table_main_values.moveToFirst();
+        currentScore = cursor_table_main_values.getInt(cursor_table_main_values.getColumnIndex(MainValuesEntry.COLUMN_MAIN_VALUE_CURRENT_SCORE));
+        currentCircle = cursor_table_main_values.getBlob(cursor_table_main_values.getColumnIndex(MainValuesEntry.COLUMN_MAIN_VALUE_CURRENT_CIRCLE));
+
+        cursor_table_main_values.close();
     }
 
-    public void setTotalScore(long totalScore) {
-        this.totalScore = totalScore;
+    public void setCurrentScore(long currentScore) {
+        this.currentScore = currentScore;
     }
 
-    public long getTotalScore() {
-        return totalScore;
+    public long getCurrentScore() {
+        return currentScore;
     }
 
-    public void setCircleType(byte[] circleType) {
-        this.circleType = circleType;
+    public void setCurrentCircle(byte[] currentCircle) {
+        this.currentCircle = currentCircle;
     }
 
-    public byte[] getCircleType() {
-        return circleType;
+    public byte[] getCurrentCircle() {
+        return currentCircle;
     }
+
+
 
 }

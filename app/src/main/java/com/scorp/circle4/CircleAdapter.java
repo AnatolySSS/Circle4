@@ -41,6 +41,7 @@ public class CircleAdapter extends ArrayAdapter<Circle> {
         options.inTempStorage = new byte[1024 * 32];
 
         Bitmap bm = BitmapFactory.decodeByteArray(currentCircle.getmImage(), 0, currentCircle.getmImage().length, options);
+        bm = Bitmap.createScaledBitmap(bm, circleImage.getMaxWidth(),circleImage.getMaxHeight(),true);
         circleImage.setImageBitmap(bm);
 
         if (circles.get(position).isBought()) {

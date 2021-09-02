@@ -1,6 +1,5 @@
 package com.scorp.circle4;
 
-import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Random;
 
@@ -101,7 +99,7 @@ public class TournamentFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        byte[] currentCircle = ((GlobalVariables) this.getActivity().getApplication()).getCircleType();
+        byte[] currentCircle = ((GlobalVariables) this.getActivity().getApplication()).getCurrentCircle();
         if (currentCircle != null) {
 
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -111,6 +109,7 @@ public class TournamentFragment extends Fragment {
             options.inTempStorage = new byte[1024 *32];
 
             Bitmap bm = BitmapFactory.decodeByteArray(currentCircle, 0, currentCircle.length, options);
+            bm = Bitmap.createScaledBitmap(bm, circle.getMaxWidth(),circle.getMaxHeight(),true);
 
             circle.setImageBitmap(bm);
         }
