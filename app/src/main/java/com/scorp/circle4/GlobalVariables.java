@@ -17,6 +17,7 @@ import static com.scorp.circle4.data.CircleContract.CircleEntry;
 public class GlobalVariables extends Application {
     public long currentScore;
     public byte[] currentCircle;
+    public int recordTournamentScore;
     public final ArrayList<Circle> circles = new ArrayList<>();
     public CircleDbHelper mDbHelper;
     public SQLiteDatabase mDb;
@@ -60,12 +61,15 @@ public class GlobalVariables extends Application {
         String[] projection_main_values = {
                 MainValuesEntry.COLUMN_MAIN_VALUE_CURRENT_SCORE,
                 MainValuesEntry.COLUMN_MAIN_VALUE_CURRENT_CIRCLE,
+                MainValuesEntry.COLUMN_MAIN_VALUE_RECORD_TOURNAMENT_SCORE
         };
 
         Cursor cursor_table_main_values = mDb.query(MainValuesEntry.TABLE_NAME, projection_main_values, null, null, null, null, null);
         cursor_table_main_values.moveToFirst();
+
         currentScore = cursor_table_main_values.getInt(cursor_table_main_values.getColumnIndex(MainValuesEntry.COLUMN_MAIN_VALUE_CURRENT_SCORE));
         currentCircle = cursor_table_main_values.getBlob(cursor_table_main_values.getColumnIndex(MainValuesEntry.COLUMN_MAIN_VALUE_CURRENT_CIRCLE));
+        recordTournamentScore = cursor_table_main_values.getInt(cursor_table_main_values.getColumnIndex(MainValuesEntry.COLUMN_MAIN_VALUE_RECORD_TOURNAMENT_SCORE));
 
         cursor_table_main_values.close();
     }

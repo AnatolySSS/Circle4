@@ -2,6 +2,7 @@ package com.scorp.circle4;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Path;
@@ -19,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.scorp.circle4.data.MainValuesContract;
+import com.scorp.circle4.data.MainValuesContract.MainValuesEntry;
+
 import java.util.Random;
 
 public class TournamentFragment extends Fragment {
@@ -30,7 +34,8 @@ public class TournamentFragment extends Fragment {
     private int deviceWidth = 0;
     private int deviceHeight = 0;
     private long currentTournamentScore = 0;
-    private long maxTournamentScore;
+    private long maxTournamentScore = 0;
+    private long recordTournamentScore;
     private String totalScoreStr;
     private int xRand, yRand;
     private int xStart, yStart;
@@ -52,6 +57,9 @@ public class TournamentFragment extends Fragment {
 
         deviceWidth = unlimitePlayView.getResources().getDisplayMetrics().widthPixels;
         deviceHeight = unlimitePlayView.getResources().getDisplayMetrics().heightPixels;
+
+        recordTournamentScore = ((GlobalVariables) this.getActivity().getApplication()).recordTournamentScore;
+        testText.setText("Your record is " + recordTournamentScore);
 
         hasListener = false;
 
@@ -81,11 +89,11 @@ public class TournamentFragment extends Fragment {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     animCircle = ObjectAnimator.ofFloat(circle, "x", "y", path);
-                    animCircle.setDuration(1000);
+                    animCircle.setDuration(550);
                     animCircle.start();
 
                     animText = ObjectAnimator.ofFloat(scoreText, "x", "y", path);
-                    animText.setDuration(1000);
+                    animText.setDuration(550);
                     animText.start();
 
                     animCircle.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -99,9 +107,18 @@ public class TournamentFragment extends Fragment {
 
                             if (currentLength > MAX_LENGTH && !wasFired) {
                                 maxTournamentScore = currentTournamentScore;
-//                                testText.setText(String.valueOf(maxTournamentScore));
                                 Toast.makeText(getActivity(), "GameOver! Your score is " + maxTournamentScore, Toast.LENGTH_SHORT).show();
                                 wasFired = true;
+                                currentTournamentScore = 0;
+                            }
+                            if (currentTournamentScore > recordTournamentScore) {
+                                recordTournamentScore = currentTournamentScore;
+                                testText.setText("Your record is " + recordTournamentScore);
+
+                                ContentValues cv_main_values = new ContentValues();
+
+                                cv_main_values.put(MainValuesEntry.COLUMN_MAIN_VALUE_RECORD_TOURNAMENT_SCORE, recordTournamentScore);
+                                ((GlobalVariables) getActivity().getApplication()).mDb.update(MainValuesEntry.TABLE_NAME, cv_main_values, MainValuesEntry._ID + "=" + 1, null);
                             }
                         }
                     });

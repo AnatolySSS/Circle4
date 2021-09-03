@@ -19,7 +19,7 @@ public class CircleDbHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "circles.db";
     private static String DB_PATH = "";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 4;
 
     private SQLiteDatabase mDataBase;
     private final Context mContext;
