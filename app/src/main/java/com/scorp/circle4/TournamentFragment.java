@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Random;
 
@@ -28,11 +29,13 @@ public class TournamentFragment extends Fragment {
     private ObjectAnimator animCircle, animText;
     private int deviceWidth = 0;
     private int deviceHeight = 0;
-    private long score = 0;
+    private long currentTournamentScore = 0;
+    private long maxTournamentScore;
     private String totalScoreStr;
     private int xRand, yRand;
     private int xStart, yStart;
     private final int MAX_LENGTH = 420;
+    boolean hasListener, wasFired;
 
     public TournamentFragment() {
         // Required empty public constructor
@@ -50,15 +53,23 @@ public class TournamentFragment extends Fragment {
         deviceWidth = unlimitePlayView.getResources().getDisplayMetrics().widthPixels;
         deviceHeight = unlimitePlayView.getResources().getDisplayMetrics().heightPixels;
 
+        hasListener = false;
+
         circle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                wasFired = false;
+
+                if (hasListener) {
+                    animCircle.removeAllUpdateListeners();
+                }
+
                 xStart = (int) circle.getX();
                 yStart = (int) circle.getY();
 
-                score++;
-                totalScoreStr = String.valueOf(score);
+                currentTournamentScore++;
+                totalScoreStr = String.valueOf(currentTournamentScore);
                 scoreText.setText(totalScoreStr);
 
                 xRand = new Random().nextInt(deviceWidth - circle.getWidth());
@@ -78,14 +89,19 @@ public class TournamentFragment extends Fragment {
                     animText.start();
 
                     animCircle.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
                         @Override
                         public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                            hasListener = true;
                             float currentX = (float) valueAnimator.getAnimatedValue("x");
                             float currentY = (float) valueAnimator.getAnimatedValue("y");
-                            int currentLength = (int) Math.sqrt(Math.pow(Math.abs(currentX - xStart), 2) + Math.pow(Math.abs(currentY - yStart), 2));
-                            testText.setText("");
-                            if (currentLength > MAX_LENGTH) {
-                                testText.append(String.valueOf(currentLength));
+                            int currentLength = (int) Math.sqrt(Math.pow(currentX - xStart, 2) + Math.pow(currentY - yStart, 2));
+
+                            if (currentLength > MAX_LENGTH && !wasFired) {
+                                maxTournamentScore = currentTournamentScore;
+//                                testText.setText(String.valueOf(maxTournamentScore));
+                                Toast.makeText(getActivity(), "GameOver! Your score is " + maxTournamentScore, Toast.LENGTH_SHORT).show();
+                                wasFired = true;
                             }
                         }
                     });
